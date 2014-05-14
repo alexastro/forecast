@@ -61,5 +61,6 @@ Add calling of cron script to process notifications:
 php cron_task.php forecast:notify [location=name]
 
 Demo:
+-----
 
 http://forecast.devbion.com
