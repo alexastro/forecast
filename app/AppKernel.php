@@ -28,7 +28,8 @@ class AppKernel extends Kernel
             new Sensio\Bundle\BuzzBundle\SensioBuzzBundle(),
             new Mopa\Bundle\WSSEAuthenticationBundle\MopaWSSEAuthenticationBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
-            new ByExample\DemoBundle\ByExampleDemoBundle()
+            new ByExample\DemoBundle\ByExampleDemoBundle(),
+            new Forecast\WeatherBundle\ForecastWeatherBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

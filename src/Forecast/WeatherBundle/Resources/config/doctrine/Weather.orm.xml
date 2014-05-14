@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Forecast\WeatherBundle\Entity\Weather" table="weather">
+
+        <field name="temp" column="temp" type="integer" />
+        
+        <field name="windSpeed" column="wind_speed" type="float" />
+        
+        <field name="windDirection" column="wind_direction" type="string" length="10" />
+        
+        <field name="rainChance" column="rain_chance" type="float" />
+        
+        <field name="humidity" column="humidity" type="float" />
+        
+        <id name="location" type="integer" column="location_id" association-key="true"></id>
+        <id name="timestamp" type="bigint" column="timestamp"></id>
+        
+        <indexes>
+            <index name="temp_idx" columns="temp"/>
+            <index name="location_idx" columns="location_id"/>
+        </indexes>
+        
+        <many-to-one field="location" target-entity="Location" mapped-by="id" inversed-by="weathers">
+            <cascade>
+                <cascade-detach/>
+            </cascade>
+        </many-to-one>    
+    </entity>
+
+</doctrine-mapping>

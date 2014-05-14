@@ -1,0 +1,32 @@
+<h2>Weather Forecast</h2>
+
+<p>{{ forecast.Location.Name }} on {{ forecast.Date.format(constant('DATE_RFC822')) }}</p>
+
+<p>We expect </p>
+
+{% if (notification.ToHot == 1) and (forecast.MaxTempWeather.Temp >= constant('Forecast\\WeatherBundle\\Event\\EventListener::TOO_HOT_TEMP')) %}
+    <h4>Extremely HOT weather</h4>
+    {% for weather in forecast.Weathers %}
+        {% if (weather.Temp == forecast.MaxTempWeather.Temp) %}
+        <p><strong>{{ weather.Temp }}°</strong> at {{ weather.Timestamp|date('H:i') }}  </p>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+{% if (notification.ToCold == 1 and forecast.MinTempWeather.Temp >= constant('Forecast\\WeatherBundle\\Event\\EventListener::TOO_COLD_TEMP')) %}
+    <h4>Extremely COLD weather</h4>
+    {% for weather in forecast.Weathers %}
+        {% if (weather.Temp == forecast.MinTempWeather.Temp) %}
+        <p><strong>{{ weather.Temp }}°</strong> at {{ weather.Timestamp|date('H:i') }}  </p>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+{% if (notification.StrongWind == 1 and forecast.StrongWindWeather.WindSpeed >= constant('Forecast\\WeatherBundle\\Event\\EventListener::STRONG_WIND')) %}
+    <h4>Extremely STRONG WIND</h4>
+    {% for weather in forecast.Weathers %}
+        {% if (weather.WindSpeed == forecast.StrongWindWeather.WindSpeed) %}
+        <p><strong>{{ weather.WindSpeed }} m/s</strong> at {{ weather.Timestamp|date('H:i') }}  </p>
+        {% endif %}
+    {% endfor %}
+{% endif %}

@@ -26,7 +26,7 @@ twig:
 assetic:
     debug:          %kernel.debug%
     use_controller: false
-    bundles:        [ ByExampleDemoBundle]
+    bundles:        [ ByExampleDemoBundle, ForecastWeatherBundle]
     #java: /usr/bin/java
     filters:
         cssrewrite: ~
@@ -72,6 +72,7 @@ swiftmailer:
     host:      %mailer_host%
     username:  %mailer_user%
     password:  %mailer_password%
+    delivery_address: "alexastro@gmail.com"
     spool:     { type: memory }
 
 jms_security_extra:
@@ -117,6 +118,8 @@ fos_rest:
             json: fos_rest.decoder.json
     param_fetcher_listener: true
     allowed_methods_listener: true
+    routing_loader:
+        default_format: json
 
 mopa_wsse_authentication:
     provider_class: Mopa\Bundle\WSSEAuthenticationBundle\Security\Authentication\Provider\WsseAuthenticationProvider
@@ -132,3 +135,6 @@ stof_doctrine_extensions:
             sluggable: true
             loggable: true
             tree: true
+
+forecast_weather:
+    db_driver: orm

@@ -1,0 +1,6 @@
+services:
+    forecast_weather.entity_manager:
+        public: false
+        factory-method: getManager
+        factory-service: doctrine
+        class: Doctrine\ORM\EntityManager

@@ -1,0 +1,208 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Forecast Webapp</title>
+        {% block javascripts %}
+        {% javascripts  '@ForecastWeatherBundle/Resources/public/js/knockout-3.1.0.js'
+                        '@ForecastWeatherBundle/Resources/public/js/jquery-1.11.0.min.js'
+                        '@ForecastWeatherBundle/Resources/public/js/sammy-0.7.5.min.js'
+                        '@ForecastWeatherBundle/Resources/public/js/*' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        {% endblock %}
+        
+        {% block stylesheets %}
+        {% stylesheets  'bundles/forecastweather/css/*' filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+        {% stylesheets  'bundles/forecastweather/fonts/font-awesome-4.0.3/css/font-awesome.min.css' filter='cssrewrite' %}
+        <link rel="stylesheet" type="text/css" rel="stylesheet" media="all" href="{{ asset_url }}" />
+        {% endstylesheets %}
+        {% stylesheets  'bundles/forecastweather/fonts/forecast-font/forecast-icons.css' filter='cssrewrite' %}
+        <link rel="stylesheet" type="text/css" rel="stylesheet" media="all" href="{{ asset_url }}" />
+        {% endstylesheets %}
+        {% endblock %}
+        
+    </head>
+
+    <body>
+        
+        <div class="container">
+            <header>
+                <nav>
+                    <ul class="sections" data-bind="foreach: sections">
+                        <li data-bind="text: $data, 
+                                       css: { selected: $data == $root.chosenSectionId() },
+                                       click: $root.goToSection"></li>
+                    </ul>
+                    <select id="location_id" placeholder="Location" data-bind="foreach: availableLocations, value: $root.selectedLocationId">
+                        <option data-bind="text: name, value: id, selected: id == $root.selectedLocationId()"></option>
+                    </select>    
+                </nav>
+            </header>
+
+            <section>
+
+                <article data-bind="if: $root.chosenSectionId() == 'Forecast'">
+                    <div class="overview" id="forecast">
+                        <div class="day_time">
+                            <span class="fa fa-arrow-left" data-bind="click: $root.goToPrev"></span>
+                            <span class="val" data-bind="text: $root.chosenDate().format('dddd, mmmm d, yyyy')"></span>
+                            <span class="fa fa-arrow-right" data-bind="click: $root.goToNext"></span>
+                        </div>
+                        
+                        <div class="details" data-bind="ifnot: emptyForecast">
+                            <div class="summary" data-bind="with: chosenForecast().summary">
+                                <div class="temp"><span data-bind="text: temp"></span>°</div>
+                                <div class="image" data-bind="html: img"></div>
+                                <br class="clear" />
+                                <div>Avg. </div>
+                                <div class="rain-chance">rain chance: <span data-bind="text: rainChance"></span>%, </div>
+                                <div class="max-temp">max t: <span data-bind="text: tempMax"></span>°, </div>
+                                <div class="min-temp">min t: <span data-bind="text: tempMin"></span>°</div>
+                            </div>        
+                            <div class="records" data-bind="foreach: chosenForecast().weather">
+                                <div class="row">
+                                    <span class="time" data-bind="text: time"></span>
+                                    <span class="temp"><strong data-bind="text: temp"></strong>°</span>
+                                    <span class="wind-speed">Wind: <strong data-bind="text: windSpeed"></strong> m/s</span>
+                                    <span class="wind-dir"><strong data-bind="text: windDirection"></strong></span>
+                                    <span class="rain-chance">Rain Chance: <strong data-bind="text: rainChance"></strong>%</span>
+                                    <span class="humidity">Humidity: <strong data-bind="text: humidity"></strong>%</span>
+                                    <span class="edit" data-bind="click: $root.editWeather">edit</span>
+                                    <span class="edit" data-bind="click: $root.deleteWeather">delete</span>
+                                </div>
+                            </div>
+                        </div>
+                        <form id="edit-weather-form" data-bind="submit: updateWeather,visible: showWeatherForm">
+                            <div class="row" data-bind="with: weatherEntry">
+                                <div class="time"><input type="text" id="upd_time" class="timepicker" data-bind="value: time" /></div>
+                                <div class="temp"><input type="text" id="upd_temp" placeholder="Temp" data-bind="value: temp" />°</div>
+                                <div class="wind-speed"><input type="text" id="upd_windSpeed" placeholder="Wind Speed" data-bind="value: windSpeed" /> m/s</div>
+                                <div class="wind-dir"><select id="upd_windDirection" data-bind="value: windDirection, options: $root.availableWindDirs"></select></div>
+                                <div class="rain-chance"><input type="text" id="upd_rainChance" placeholder="Rain Chance" data-bind="value: rainChance" />%</div>
+                                <div class="humidity"><input type="text" id="upd_humidity" placeholder="Humidity" data-bind="value: humidity" />%</div>
+                                <div class="buttons">
+                                    <button type="submit">Save</button>
+                                    <button type="button" class="cancel-btn" data-bind="click: $root.closeWeatherForm">Cancel</button>
+                                </div>    
+                            </div>
+                        </form>
+                        
+                        <p data-bind="if: emptyForecast">There is no forecast for this date.</p> 
+                        <p><a href="#" data-bind="click: $root.editWeather">Click to create new record</a>.</p>
+                    </div>
+                    
+                </article>
+
+                <article data-bind="if: $root.chosenSectionId() == 'Check Date'">
+                    <div id="check-date">
+                        <header>
+                            <h2>Check Date</h2>
+                        </header>
+
+                        <input type="text" id="chosen-date" data-bind="value: chosenDateTxt" />
+                    </div>
+                </article>
+
+                <article data-bind="if: $root.chosenSectionId() == 'Locations'">
+                    <div class="overview" id="locations">
+                        <header>
+                            <h2>Locations</h2>
+                        </header>
+                        <div class="details">
+                            <div class="records" data-bind="foreach: availableLocations">
+                                <div class="row">
+                                    <span class="name" data-bind="text: name"></span>
+                                    <span class="lat">Latitude: <strong data-bind="text: lat"></strong></span>
+                                    <span class="lng">Longitude: <strong data-bind="text: lng"></strong></span>
+                                    <span class="edit" data-bind="click: $root.editLocation">edit</span>
+                                    <span class="edit" data-bind="click: $root.deleteLocation">delete</span>
+                                </div>
+                            </div>
+                        </div>
+                        <form id="edit-location-form" data-bind="submit: updateLocation,visible: showLocationForm">
+                            <div class="row" data-bind="with: locationEntry">
+                                <div class="name"><input type="text" id="upd_name" placeholder="Name" data-bind="value: name" /></div>
+                                <div class="lat"><input type="text" id="upd_lat" placeholder="Latitude" data-bind="value: lat" /></div>
+                                <div class="lng"><input type="text" id="upd_lng" placeholder="Longitude" data-bind="value: lng" /></div>
+                                <br />
+                                <div class="buttons">
+                                    <button type="submit">Save</button>
+                                    <button type="button" class="cancel-btn" data-bind="click: $root.closeLocationForm">Cancel</button>
+                                </div>    
+                            </div>
+                        </form>
+                        
+                        <p><a href="#" data-bind="click: $root.editLocation">Add new location</a>.</p>
+                    </div>
+                    
+                </article>
+
+                <article data-bind="if: $root.chosenSectionId() == 'Notifications'">
+                    <div class="overview" id="notifications">
+                        <header>
+                            <h2>Notifications</h2>
+                        </header>
+                        
+                        <div class="details">
+                            <div class="records" data-bind="foreach: notifications">
+                                <div class="row">
+                                    <span class="location_name" data-bind="text: location.name"></span>
+                                    <span class="email"><strong data-bind="text: email"></strong></span>
+                                    <span class="check">Too hot: <input type="checkbox" disabled="disabled" data-bind="checked: to_hot" /></span>
+                                    <span class="check">Too cold: <input type="checkbox" disabled="disabled" data-bind="checked: to_cold" /></span>
+                                    <span class="check">Strong Wind: <input type="checkbox" disabled="disabled" data-bind="checked: strong_wind" /></span>
+                                    <span class="edit" data-bind="click: $root.editNotification">edit</span>
+                                    <span class="edit" data-bind="click: $root.deleteNotification">delete</span>
+                                </div>
+                            </div>
+                        </div>
+                        <form id="edit-notification-form" data-bind="submit: updateNotification,visible: showNotificationForm">
+                            <div class="row" data-bind="with: notificationEntry">
+                                        <div class="name">
+                                            <select id="upd_locationId" placeholder="Location" data-bind="foreach: $root.availableLocations, value: locationId">
+                                                <option data-bind="text: name, value: id, selected: id == location_id"></option>
+                                            </select>
+                                        </div>
+                                <div class="email"><input type="text" id="upd_email" placeholder="Email" data-bind="value: email" /></div>
+                                <div class="check"><label>too hot:<input type="checkbox" value="1" id="upd_to_hot" data-bind="checked: to_hot" /></label></div>
+                                <div class="check"><label>too cold:<input type="checkbox" value="1" id="upd_to_cold" data-bind="checked: to_cold" /></label></div>
+                                <div class="check"><label>strong wind:<input type="checkbox" value="1" id="upd_strong_wind" data-bind="checked: strong_wind" /></label></div>
+                                <br />
+                                <div class="buttons">
+                                    <button type="submit">Save</button>
+                                    <button type="button" class="cancel-btn" data-bind="click: $root.closeNotificationForm">Cancel</button>
+                                </div>    
+                            </div>
+                        </form>
+                        
+                        <p><a href="#" data-bind="click: $root.editNotification">Add notification</a>.</p>
+                    </div>                   
+                </article>
+                
+            </section>
+
+            <aside>
+                <h2>About section</h2>
+                <p>Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>
+            </aside>
+
+            <footer>
+                <p>Copyright 2014 Aleksey Polishchuk</p>
+            </footer>
+        </div>
+        
+        <script type="text/javascript">
+            {% if locations|length > 0 %}
+            locations = {{ locations|json_encode(constant('JSON_PRETTY_PRINT'))|raw }};
+            {% else %}
+            locations = '[]';    
+            {% endif %}
+        </script>  
+        
+    </body>
+
+</html>  

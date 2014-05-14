@@ -1,0 +1,57 @@
+/* forecast icons font*/
+@font-face {
+  font-family: "iconvault";
+  src: url("../bundles/forecastweather/fonts/forecast-font/iconvault_forecastfont.eot");
+  src: url("../bundles/forecastweather/fonts/forecast-font/iconvault_forecastfont.eot?#iefix") format("embedded-opentype"),
+       url("../bundles/forecastweather/fonts/forecast-font/iconvault_forecastfont.woff") format("woff"),
+       url("../bundles/forecastweather/fonts/forecast-font/iconvault_forecastfont.ttf") format("truetype"),
+       url("../bundles/forecastweather/fonts/forecast-font/iconvault_forecastfont.svg#iconvault") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}	
+
+
+/** weather icons **/
+[class^="icon-"],
+[class*=" icon-"] {
+    font-family: 'iconvault';
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: inherit;
+    -webkit-font-smoothing: antialiased;
+    font-size: 6em;
+}
+
+@media only screen and (min-width: 479px) and (max-width: 678px){
+[class^="icon-"],
+[class*=" icon-"] {
+    font-family: 'iconvault';
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: inherit;
+    -webkit-font-smoothing: antialiased;}
+}
+
+.icon-sunny::after {
+    content: "\f113";
+    color: rgb(255, 165, 0);
+    position: absolute;
+}
+
+.icon-drizzle::before  {
+	content: "\f10a";
+	color: #82b2e4;
+	position: absolute;
+}
+
+.icon-rainy::before {
+	content: "\f107";
+	position:absolute;
+	color:#4681c3;
+}
+
+.icon-snowy::before  {
+	content: "\f10b";
+	position:absolute;
+	color:#acd3f3;
+}

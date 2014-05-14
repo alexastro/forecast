@@ -22,9 +22,18 @@
 #    resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
 #    prefix: /change-password
 
+weather_front_forecast:
+    resource: "@ForecastWeatherBundle/Resources/config/front_routing.yml"
+    prefix: /
+
+weather_forecast:
+    resource: "@ForecastWeatherBundle/Resources/config/routing.yml"
+    type: rest
+    prefix: /forecast
+
 NelmioApiDocBundle:
     resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
-    prefix:   /
+    prefix:   /api-docs
 
 byexample_demo_securityrest:
     resource: ByExample\DemoBundle\Controller\SecurityController

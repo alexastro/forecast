@@ -1,0 +1,7 @@
+weather_forecast:
+    resource: Forecast\WeatherBundle\Controller\DefaultController
+    type: rest
+    
+weather_notification:
+    resource: Forecast\WeatherBundle\Controller\NotificationController
+    type: rest

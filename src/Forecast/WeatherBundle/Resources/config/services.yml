@@ -1,0 +1,10 @@
+parameters:
+
+services:
+
+    kernel.listener.process_notifications:
+        class: Forecast\WeatherBundle\Event\EventListener
+        arguments:
+            - @service_container
+        tags:
+            - { name: kernel.event_listener, event: forecast.process_notification, method: processNotifications }

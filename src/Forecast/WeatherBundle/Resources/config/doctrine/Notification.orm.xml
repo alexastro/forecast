@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Forecast\WeatherBundle\Entity\Notification" table="notifications">
+
+        <field name="email" column="email" type="string" length="255" />
+
+        <field name="to_hot" column="to_hot" type="smallint" default="1" />
+
+        <field name="to_cold" column="to_cold" type="smallint" default="1" />
+        
+        <field name="strong_wind" column="strong_wind" type="smallint" default="1" />
+        
+        <indexes>
+            <index name="email" columns="email"/>
+            <index name="to_hot" columns="to_hot"/>
+            <index name="to_cold" columns="to_cold"/>
+            <index name="strong_wind" columns="strong_wind"/>
+        </indexes>
+        
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        
+        <many-to-one field="location" column="location_id" target-entity="Location" mapped-by="id" inversed-by="notifications">
+            <cascade>
+                <cascade-detach/>
+            </cascade>
+        </many-to-one>    
+        
+    </entity>
+
+</doctrine-mapping>

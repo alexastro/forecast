@@ -1,0 +1,3 @@
+weather_front_forecast_index:
+    defaults: { _controller: ForecastWeatherBundle:Front:index}
+    path: /
